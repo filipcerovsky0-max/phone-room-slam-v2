@@ -10,12 +10,13 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
     - uses: android-actions/setup-android@v3
-    - name: Install NDK
-      run: sdkmanager --install "ndk;25.1.8937393" "cmake;3.22.1"
-    - name: Build APK
+    - name: Install NDK and Gradle
       run: |
-        chmod +x gradlew || true
-        ./gradlew assembleDebug || true
+        sdkmanager --install "ndk;25.1.8937393" "cmake;3.22.1"
+        sudo apt-get update && sudo apt-get install -y gradle
+    - name: Build APK using System Gradle
+      run: |
+        gradle assembleDebug
     - name: Find and Upload any APK
       uses: actions/upload-artifact@v4
       with:
