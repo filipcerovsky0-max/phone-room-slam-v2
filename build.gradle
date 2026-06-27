@@ -1,7 +1,41 @@
 buildscript {
-    repositories { google(); mavenCentral() }
-    dependencies { classpath 'com.android.tools.build:gradle:8.2.2' }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.2'
+    }
 }
+
+plugins {
+    id 'com.android.application'
+}
+
 allprojects {
-    repositories { google(); mavenCentral() }
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+android {
+    namespace "com.filipcerovsky.phoneroomslam"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.filipcerovsky.phoneroomslam"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file("CMakeLists.txt")
+            version "3.22.1"
+        }
+    }
+    ndkVersion "25.1.8937393"
 }
