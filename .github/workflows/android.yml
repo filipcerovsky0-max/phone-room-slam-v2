@@ -1,4 +1,4 @@
-name: Build Flutter APK (Auto-Detect Path)
+name: Build Flutter APK (Fixed & Clean)
 on: [push, pull_request]
 
 jobs:
@@ -21,26 +21,23 @@ jobs:
 
     - name: Find and Fix Flutter Project Structure
       run: |
-        # Najdeme, kde se nachází pubspec.yaml
         PUBSPEC_PATH=$(find . -name "pubspec.yaml" | head -n 1)
         
         if [ -z "$PUBSPEC_PATH" ]; then
-          echo "ERROR: pubspec.yaml nebyl v repozitáři vůbec nalezen!"
+          echo "ERROR: pubspec.yaml nebyl nalezen!"
           exit 1
         fi
         
-        # Získáme složku, ve které pubspec.yaml leží
         PROJECT_DIR=$(dirname "$PUBSPEC_PATH")
         echo "PROJECT_DIR=$PROJECT_DIR" >> $GITHUB_ENV
-        echo "Flutter projekt nalezen ve složce: $PROJECT_DIR"
         
         cd "$PROJECT_DIR"
-        # Vyčistíme případný starý nekompletní android bordel v téhle složce
+        # Vyčistíme staré konfliktní Gradle soubory v kořeni projektu
         rm -f build.gradle settings.gradle gradlew gradlew.bat
         rm -rf android
         
-        # Vynutíme vygenerování čisté android složky přímo u pubspec.yaml
-        flutter create . --platforms=android --force
+        # Vytvoříme čistou android složku (bez parametru --force, který házel chybu)
+        flutter create . --platforms=android
 
     - name: Fetch Dependencies
       run: |
